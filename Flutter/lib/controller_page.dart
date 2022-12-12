@@ -281,7 +281,6 @@ class _MyHomePageState extends State<MyHomePage> {
                           future: res,
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
-                              print("FutureBuilder${snapshot.data!.day_temperature}");
                               day_temperature = snapshot.data!.day_temperature;
                               diff_temperature = snapshot.data!.diff_temperature;
                               return Text(
@@ -414,7 +413,6 @@ class settingRequest {
 Future<RecoardResults> getSetting() async {
   var url = "http://192.168.11.26:8000/get_parameter_set/";
   final response = await http.get(Uri.parse(url));
-  print("getSetting" + response.body);
   if (response.statusCode == 200) {
     return RecoardResults.fromJson(json.decode(response.body));
   } else {
@@ -428,9 +426,7 @@ void updateSetting(day_temperature, night_temperature, diff_temperature) async {
   final response = await http.post(Uri.parse(url),
       body: json.encode(request.toJson()),
       headers: {"Content-Type": "application/json"});
-  print("updateSetting***" + response.body);
   if (response.statusCode == 200) {
-    print("設定温度更新完了");
   } else {
     throw Exception('Failed');
   }

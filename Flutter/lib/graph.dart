@@ -38,7 +38,6 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     res = getRecords();
-    print(res);
   }
 
   @override
@@ -210,7 +209,6 @@ class RecoardResults {
 Future<List<RecoardResults>> getRecords() async {
   var url = "http://192.168.11.26:8000/get_records/";
   final response = await http.get(Uri.parse(url));
-  print("****${json.decode(response.body)}");
   if (response.statusCode == 200) {
     Iterable l = json.decode(response.body);
     List<RecoardResults> posts = List<RecoardResults>.from(l.map((model)=> RecoardResults.fromJson(model)));
