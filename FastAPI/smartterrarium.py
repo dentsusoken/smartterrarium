@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi_utils.tasks import repeat_every
+from starlette.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import datetime
 import pytz
@@ -40,13 +41,9 @@ def heater_control():
     dt_now = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
     measurement_time = dt_now.strftime('%Y-%m-%d %H:%M:%S')
 
-    print(temperature, humidity, measurement_time)
-
     # プラグのスイッチング
     heat_flag = control_plug.switch_plug(
         temperature, dt_now)
-    control_plug.write_temperature_humidity(
-        temperature, humidity, measurement_time)
 
     # DBへの環境データの書き込み
     read_write_db.update_temperature_humidity(
@@ -65,8 +62,6 @@ async def get_record():
     return records
 
 # レコード取得（温度、湿度記録）
-
-
 @app.get("/get_record/")
 async def get_record():
     records = read_write_db.read_one_records()
@@ -97,4 +92,4 @@ async def update_parameter_set(parameter_set: ParameterSet):
 @app.get("/get_parameter_set/")
 async def get_parameter_set():
     day_temperature, night_temperature, diff_temperature = read_write_db.read_parameter_set()
-    return {"message": "ok", "day_temperature":  int(day_temperature), "night_temperature": int(night_temperature), "diff_temperature": int(diff_temperature)}
+    return {"message": "ok", "day_temperature": int(day_temperature), "night_temperature": int(night_temperature), "diff_temperature": int(diff_temperature)}
