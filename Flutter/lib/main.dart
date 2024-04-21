@@ -74,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: OutlinedButton(
                           child: const Text('これまでの記録'),
                           style: OutlinedButton.styleFrom(
-                            primary: Colors.black,
+                            foregroundColor: Colors.black,
                             shape: const StadiumBorder(),
                             side: const BorderSide(color: Colors.green),
                           ),
@@ -101,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: OutlinedButton(
                           child: const Text('温度設定'),
                           style: OutlinedButton.styleFrom(
-                            primary: Colors.black,
+                            foregroundColor: Colors.black,
                             shape: const StadiumBorder(),
                             side: const BorderSide(color: Colors.green),
                           ),

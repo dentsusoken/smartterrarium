@@ -79,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: OutlinedButton(
                           child: const Text('現在温度'),
                           style: OutlinedButton.styleFrom(
-                            primary: Colors.black,
+                            foregroundColor: Colors.black,
                             shape: const StadiumBorder(),
                             side: const BorderSide(color: Colors.green),
                           ),
@@ -109,8 +109,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       // 日中設定温度上昇ボタン
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.white,
-                          onPrimary: Colors.lime,
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.lime,
                           shape: const CircleBorder(
                             side: BorderSide(
                               color: Colors.lime,
@@ -136,8 +136,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       // 日中設定温度低下ボタン
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.white,
-                          onPrimary: Colors.lime,
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.lime,
                           shape: const CircleBorder(
                             side: BorderSide(
                               color: Colors.lime,
@@ -163,8 +163,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       // 夜間設定温度上昇ボタン
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.white,
-                          onPrimary: Colors.lime,
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.lime,
                           shape: const CircleBorder(
                             side: BorderSide(
                               color: Colors.lime,
@@ -190,8 +190,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       // 夜間設定温度低下ボタン
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.white,
-                          onPrimary: Colors.lime,
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.lime,
                           shape: const CircleBorder(
                             side: BorderSide(
                               color: Colors.lime,

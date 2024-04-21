@@ -69,7 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: OutlinedButton(
                           child: const Text('現在温度'),
                           style: OutlinedButton.styleFrom(
-                            primary: Colors.black,
+                            foregroundColor: Colors.black,
                             shape: const StadiumBorder(),
                             side: const BorderSide(color: Colors.green),
                           ),
