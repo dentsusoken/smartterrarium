@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:smartterrarium/controller_page.dart';
+import 'text.dart';
 import 'package:page_transition/page_transition.dart';
 
 import 'main.dart';
@@ -79,6 +79,33 @@ class _MyHomePageState extends State<MyHomePage> {
                               PageTransition(
                                 child: MyApp(), //画面遷移先
                                 type: PageTransitionType.bottomToTop, //アニメーションの種類
+                                duration: const Duration(milliseconds: 300),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.bottomCenter,
+                      width: 160,
+                      height: 500,
+                      child: Container(
+                        width: 160,
+                        height: 40,
+                        child: OutlinedButton(
+                          child: const Text('EPStest'),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: Colors.black,
+                            shape: const StadiumBorder(),
+                            side: const BorderSide(color: Colors.green),
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              PageTransition(
+                                child: EPSTest(), //画面遷移先
+                                type: PageTransitionType.topToBottom, //アニメーションの種類
                                 duration: const Duration(milliseconds: 300),
                               ),
                             );

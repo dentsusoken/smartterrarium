@@ -1,14 +1,16 @@
 import 'dart:async';
+import 'dart:convert';
+
+import 'package:flutter/services.dart';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:smartterrarium/controller_page.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:smartterrarium/graph.dart';
 
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class EPSTest extends StatelessWidget {
+  const EPSTest({super.key});
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -32,9 +34,29 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late Future<RecoardResults> res;
   @override
   void initState() {
     super.initState();
+    res = getRecord();
+  }
+
+  static const platform = MethodChannel('channel');
+
+  String _response = '';
+
+  Future<void> _sendDataToNative(String data) async {
+    String response = '';
+    try {
+      final String result = await platform.invokeMethod('processData', {'data': data});
+      response = result;
+    } on PlatformException catch (e) {
+      response = "Failed to Invoke: '${e.message}'.";
+    }
+
+    setState(() {
+      _response = response;
+    });
   }
 
   @override
@@ -56,6 +78,33 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Stack(
                   alignment: AlignmentDirectional.center,
                   children: <Widget>[
+                    Container(
+                      alignment: Alignment.topCenter,
+                      width: 160,
+                      height: 500,
+                      child: Container(
+                        width: 160,
+                        height: 40,
+                        child: OutlinedButton(
+                          child: const Text('これまでの記録'),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: Colors.black,
+                            shape: const StadiumBorder(),
+                            side: const BorderSide(color: Colors.green),
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                              PageTransition(
+                                child: GraphPage(), //画面遷移先
+                                type: PageTransitionType.topToBottom, //アニメー
+                                duration: const Duration(milliseconds: 300),// ションの種類
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
                     Container(
                       alignment: Alignment.centerRight,
                       width: 500,
@@ -177,14 +226,23 @@ class _MyHomePageState extends State<MyHomePage> {
                             bottomLeft: Radius.circular(50),
                           ),
                         ),
-                        child: const TextField(
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Enter a search term',
-                            contentPadding: EdgeInsets.only(left: 16), // 左端から5pxのパディングを追加
-                          ),
-                          autofocus: true,
+                        child: FutureBuilder<RecoardResults>(
+                          future: res,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return Text(
+                                "${snapshot.data!.humidity.toStringAsFixed(1)}%",
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              );
+                            } else if (snapshot.hasError) {
+                              return Text("${snapshot.error}");
+                            }
+                            return CircularProgressIndicator();
+                          },
                         ),
                       ),
                     ),//現在湿度値
@@ -215,12 +273,44 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),//現在湿度
                   ],
-                ),//真ん中の黄緑のボックス
+              ),//真ん中の黄緑のボックス
               ),//内側の緑色のボックス
             ],
           ),
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+}
+
+class RecoardResults {
+  final String timestamp;
+  final double temperature;
+  final double humidity;
+  final int heat_flag;
+  RecoardResults({
+    required this.timestamp,
+    required this.temperature,
+    required this.humidity,
+    required this.heat_flag,
+  });
+  factory RecoardResults.fromJson(Map<String, dynamic> json) {
+    return RecoardResults(
+      timestamp: json['timestamp'],
+      temperature: json['temperature'],
+      humidity: json['humidity'],
+      heat_flag: json['heat_flag'],
+    );
+  }
+}
+
+Future<RecoardResults> getRecord() async {
+  var url = "http://192.168.11.26:8000/get_record/";
+  final response = await http.get(Uri.parse(url));
+  print("****" + response.body);
+  if (response.statusCode == 200) {
+    return RecoardResults.fromJson(json.decode(response.body));
+  } else {
+    throw Exception('Failed');
   }
 }
