@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 
 void main() {
@@ -32,6 +33,26 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  static const platform = MethodChannel('test.Channel');
+
+  // Get battery level.
+  String _batteryLevel = 'Unknown battery level.';
+
+  Future<void> _getBatteryLevel() async {
+    String batteryLevel;
+    try {
+      final result = await platform.invokeMethod<int>('getBatteryLevel');
+      batteryLevel = 'Battery level at $result % .';
+    } on PlatformException catch (e) {
+      batteryLevel = "Failed to get battery level: '${e.message}'.";
+    }
+
+    setState(() {
+      _batteryLevel = batteryLevel;
+    });
+  }
+
+
   @override
   void initState() {
     super.initState();
@@ -125,7 +146,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         ),
                         child: const Text(
-                          '入力',
+                          'ボタン',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -150,15 +171,11 @@ class _MyHomePageState extends State<MyHomePage> {
                             bottomLeft: Radius.circular(50),
                           ),
                         ),
-                        child: const TextField(
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Enter a search term',
-                            contentPadding: EdgeInsets.only(left: 16), // 左端から5pxのパディングを追加
-                          ),
-                          autofocus: true,
+                        child: ElevatedButton(
+                          onPressed: _getBatteryLevel,
+                          child: const Text('バッテリー残量を取得'),
                         ),
+
                       ),
                     ),//現在温度値
                     Container(
@@ -177,14 +194,13 @@ class _MyHomePageState extends State<MyHomePage> {
                             bottomLeft: Radius.circular(50),
                           ),
                         ),
-                        child: const TextField(
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Enter a search term',
-                            contentPadding: EdgeInsets.only(left: 16), // 左端から5pxのパディングを追加
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text(_batteryLevel),
+                            ],
                           ),
-                          autofocus: true,
                         ),
                       ),
                     ),//現在湿度値
@@ -205,7 +221,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         ),
                         child: const Text(
-                          '現在湿度',
+                          '現在のバッテリー残量',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -224,3 +240,5 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+
