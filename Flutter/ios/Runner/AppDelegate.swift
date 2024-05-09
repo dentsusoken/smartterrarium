@@ -31,19 +31,19 @@ import Vision
                                   "decision" : [true, false, true]]
       print(dataFrame)
       // インスタンスを作成
-      let irisClassifierWrapper = IrisClassifierWrapper()
+      // let irisClassifierWrapper = IrisClassifierWrapper()
 
       // 0~1の範囲の4つの特徴量を入力して予測を行う
-      let features = [0.1, 0.2, 0.3, 0.4]
-      if let prediction = irisClassifierWrapper.predict(features: features) {
-          print("予測結果: \(prediction)")
-      } else {
-          print("予測に失敗しました。")
-      }
+      // let features = [0.1, 0.2, 0.3, 0.4]
+      // if let prediction = irisClassifierWrapper.predict(features: features) {
+      //     print("予測結果: \(prediction)")
+      // } else {
+      //     print("予測に失敗しました。")
+      // }
+      result("test")
+      return
     })
-
-    GeneratedPluginRegistrant.register(with: self)
-    return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+    return true
   }
 
 
@@ -60,24 +60,24 @@ import Vision
     }
 }
 
-class IrisClassifierWrapper {
-
-    var model = IrisClassifier()
-
-    func predict(features: [Double]) -> String? {
-        guard let model = model else { return nil }
-
-        do {
-            let inputArray = try MLMultiArray(shape: [4], dataType: .double)
-            for (index, value) in features.enumerated() {
-                inputArray[index] = NSNumber(value: value)
-            }
-
-            let prediction = try model.prediction(input: IrisClassifierInput(input: inputArray))
-            return prediction.classLabel
-        } catch {
-            print(error.localizedDescription)
-            return nil
-        }
-    }
-}
+// class IrisClassifierWrapper {
+//
+//     var model = IrisClassifier()
+//
+//     func predict(features: [Double]) -> String? {
+//         guard let model = model else { return nil }
+//
+//         do {
+//             let inputArray = try MLMultiArray(shape: [4], dataType: .double)
+//             for (index, value) in features.enumerated() {
+//                 inputArray[index] = NSNumber(value: value)
+//             }
+//
+//             let prediction = try model.prediction(input: IrisClassifierInput(input: inputArray))
+//             return prediction.classLabel
+//         } catch {
+//             print(error.localizedDescription)
+//             return nil
+//         }
+//     }
+// }
